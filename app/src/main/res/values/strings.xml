@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TestApp</string>
+
+    <integer name="note_title_size">250</integer>
+    <integer name="note_description_size">1000</integer>
+
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
+    <string name="add">Add</string>
+</resources>
