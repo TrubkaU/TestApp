@@ -20,6 +20,8 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
     private final WeakReference<MainView> weakReference;
     private final List<Note> notes = new ArrayList<>();
 
+    private final static long MAX_SIZE = 1024*1024+512*1024;
+
     private Note editable;
     private int pos;
 
@@ -70,7 +72,7 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
             if (notes.contains(editable)) {
                 notes.remove(editable);
                 weakReference.get().updateList();
-                RestClient.INSTANCE.getApiService().saveNotes(notes).enqueue(new SaveNotesWrapper(this));
+                saveToServer();
             }
         }
     }
@@ -95,10 +97,9 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
                 view.updateList();
             }
             view.updateList();
-            RestClient.INSTANCE.getApiService().saveNotes(notes).enqueue(new SaveNotesWrapper(this));
+            saveToServer();
         }
     }
-
 
     @Override
     public void onNotesDownload(List<Note> object) {
@@ -134,5 +135,25 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
         if (weakReference.get() != null) {
             weakReference.get().showMessasge(message);
         }
+    }
+
+    private void saveToServer() {
+        MainView view = weakReference.get();
+        if (view == null) return;
+
+        if (calcSize(notes)) {
+            RestClient.INSTANCE.getApiService().saveNotes(notes).enqueue(new SaveNotesWrapper(this));
+        } else {
+            view.showMessasge("Too many notes");
+        }
+    }
+
+    private static boolean calcSize(List<Note> notes) {
+        long total = 0;
+        for (Note note:notes) {
+            total += note.size();
+        }
+
+        return total < MAX_SIZE;
     }
 }

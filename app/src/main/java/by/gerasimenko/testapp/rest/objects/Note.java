@@ -29,4 +29,16 @@ public class Note {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public int size() {
+        int size=0;
+        if (title != null) {
+            size += title.getBytes().length;
+        }
+        if (description != null) {
+            size += description.getBytes().length;
+        }
+
+        return size;
+    }
 }
