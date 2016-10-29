@@ -11,16 +11,16 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import by.gerasimenko.testapp.R;
+import by.gerasimenko.testapp.rest.objects.Note;
+import by.gerasimenko.testapp.ui.adapter.NoteAdapter;
 import by.gerasimenko.testapp.ui.interfaces.OnActionListener;
 import by.gerasimenko.testapp.ui.interfaces.OnNoteEditListener;
 import by.gerasimenko.testapp.ui.interfaces.OnNoteListener;
 import by.gerasimenko.testapp.ui.mvp.MainPresenter;
 import by.gerasimenko.testapp.ui.mvp.MainView;
-import by.gerasimenko.testapp.ui.adapter.NoteAdapter;
-import by.gerasimenko.testapp.R;
-import by.gerasimenko.testapp.rest.objects.Note;
 
-public class MainActivity extends AppCompatActivity implements MainView,SwipeRefreshLayout.OnRefreshListener, OnNoteListener, OnActionListener, OnNoteEditListener {
+public class MainActivity extends AppCompatActivity implements MainView,SwipeRefreshLayout.OnRefreshListener, OnNoteListener, OnActionListener, OnNoteEditListener{
 
     @BindView(R.id.swipe_refresh_list)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -76,9 +76,9 @@ public class MainActivity extends AppCompatActivity implements MainView,SwipeRef
     }
 
     @Override
-    public void showActionDialog() {
-        ActionDialog dialog = new ActionDialog();
-        dialog.show(getFragmentManager(),"");
+    public void showActionDialog(ActionDialog.Mode mode) {
+        ActionDialog.newInstance(mode)
+                .show(getFragmentManager(),"");
     }
 
     @Override
@@ -118,4 +118,6 @@ public class MainActivity extends AppCompatActivity implements MainView,SwipeRef
     public void onSave(String title, String description) {
         presenter.onSaveNote(title,description);
     }
+
+
 }

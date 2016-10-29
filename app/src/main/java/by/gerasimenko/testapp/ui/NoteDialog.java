@@ -16,10 +16,8 @@ import by.gerasimenko.testapp.ui.interfaces.OnNoteEditListener;
 
 public class NoteDialog extends AbstractDialog {
 
-
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
-
 
     @BindView(R.id.note_title)
     EditText etTitle;

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:padding="@dimen/view_margin_half_half"
         android:layout_margin="@dimen/view_margin_half_half"
         style="@style/title"
         android:text="@string/edit"/>
@@ -17,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:padding="@dimen/view_margin_half_half"
         android:layout_margin="@dimen/view_margin_half_half"
         style="@style/title"
         android:text="@string/remove"/>
@@ -26,10 +28,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:padding="@dimen/view_margin_half_half"
         android:layout_margin="@dimen/view_margin_half_half"
         style="@style/title"
         android:text="@string/add"/>
-
-
 
 </LinearLayout>

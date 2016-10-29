@@ -1,7 +1,14 @@
 package by.gerasimenko.testapp.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 import by.gerasimenko.testapp.R;
 import by.gerasimenko.testapp.ui.interfaces.OnActionListener;
@@ -12,7 +19,45 @@ import by.gerasimenko.testapp.ui.interfaces.OnActionListener;
 
 public class ActionDialog extends AbstractDialog {
 
+    private static final String MODE = "mode";
+
     private OnActionListener listener;
+
+    @BindView(R.id.action_remove)
+    TextView tvRemove;
+    @BindView(R.id.action_edit)
+    TextView tvEdit;
+
+
+    public static ActionDialog newInstance(ActionDialog.Mode mode) {
+        ActionDialog instance = new ActionDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(MODE,mode);
+
+        instance.setArguments(bundle);
+        return instance;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Mode mode = (Mode) bundle.getSerializable(MODE);
+            int color;
+            boolean enable = mode != null && mode == Mode.EDIT;
+            if (enable) {
+                color = getResources().getColor(android.R.color.black);
+            } else {
+                color = getResources().getColor(android.R.color.darker_gray);
+            }
+            tvRemove.setTextColor(color);
+            tvEdit.setTextColor(color);
+            tvRemove.setEnabled(enable);
+            tvEdit.setEnabled(enable);
+        }
+    }
 
     @Override
     public void onAttach(Activity context) {
@@ -20,6 +65,12 @@ public class ActionDialog extends AbstractDialog {
         listener = (OnActionListener) context;
     }
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new AlertDialog.Builder(getActivity())
+                .show();
+    }
 
     @Override
     protected int getLayoutId() {
@@ -29,7 +80,6 @@ public class ActionDialog extends AbstractDialog {
     @OnClick(R.id.action_edit)
     public void onClickEdit() {
         listener.onClickEditNote();
-
         getDialog().dismiss();
     }
 
@@ -45,5 +95,8 @@ public class ActionDialog extends AbstractDialog {
         getDialog().dismiss();
     }
 
-
+    public enum Mode {
+        EDIT,
+        ADD
+    }
 }
