@@ -110,11 +110,17 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
 
     @Override
     public void onNotesDownload(List<Note> object) {
-        notes.clear();
-        notes.addAll(object);
         MainView view = weakReference.get();
+        if (object != null && object.isEmpty()) {
+            onClickEmptyList();
+        } else {
+            notes.clear();
+            notes.addAll(object);
+            if (view!= null) {
+                view.updateList();
+            }
+        }
         if (view!= null) {
-            view.updateList();
             view.closeRefresh();
         }
     }
