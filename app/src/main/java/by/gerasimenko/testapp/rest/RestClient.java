@@ -22,8 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public enum RestClient {
     INSTANCE;
 
-    static final String URL = "http://profigroup.by/applicants-tests/mobile/v2/";
-
+    static final String URL = "https://profigroup.by/applicants-tests/mobile/v2/";
     ApiService apiService;
 
     RestClient() {
