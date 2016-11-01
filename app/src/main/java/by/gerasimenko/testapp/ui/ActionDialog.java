@@ -1,10 +1,7 @@
 package by.gerasimenko.testapp.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
@@ -65,12 +62,6 @@ public class ActionDialog extends AbstractDialog {
         listener = (OnActionListener) context;
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getActivity())
-                .show();
-    }
 
     @Override
     protected int getLayoutId() {
