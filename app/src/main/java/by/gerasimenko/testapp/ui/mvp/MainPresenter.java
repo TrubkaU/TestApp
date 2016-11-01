@@ -26,6 +26,9 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
     private Note editable;
     private int pos;
 
+    private boolean isAwake;
+
+
     public MainPresenter(MainView view) {
         this.weakReference = new WeakReference<>(view);
 
@@ -33,13 +36,14 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
     }
 
     public void onStart(){
+        isAwake = true;
 
         onRefresh();
     }
 
     public void onStop() {
 
-
+        isAwake = false;
     }
 
     public void onRefresh() {
@@ -50,7 +54,7 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
     public void onClick(Note note) {
         if (note == null) return;
 
-        if (weakReference.get() != null) {
+        if (weakReference.get() != null && isAwake) {
             weakReference.get().showActionDialog(ActionDialog.Mode.EDIT);
             editable = note;
         }
@@ -61,14 +65,14 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
         pos = notes.indexOf(editable);
         editable = null;
 
-        if (weakReference.get() != null) {
+        if (weakReference.get() != null && isAwake) {
 
             weakReference.get().showEditNoteDialog("","");
         }
     }
 
     public void onClickRemoveNote() {
-        if (weakReference.get() != null) {
+        if (weakReference.get() != null && isAwake) {
 
             if (notes.contains(editable)) {
                 notes.remove(editable);
@@ -82,14 +86,14 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
         if (editable == null) return;
 
         MainView view = weakReference.get();
-        if (view!= null) {
+        if (view!= null && isAwake) {
             view.showEditNoteDialog(editable.getTitle(),editable.getDescription());
         }
     }
 
     public void onSaveNote(String title, String description) {
         MainView view = weakReference.get();
-        if (view != null) {
+        if (view != null && isAwake) {
             if (editable != null){
                 editable.setTitle(title);
                 editable.setDescription(description);
@@ -103,7 +107,7 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
     }
 
     public void onClickEmptyList() {
-        if (weakReference.get() != null) {
+        if (weakReference.get() != null&& isAwake) {
             weakReference.get().showActionDialog(ActionDialog.Mode.ADD);
         }
     }
@@ -116,11 +120,11 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
         } else {
             notes.clear();
             notes.addAll(object);
-            if (view!= null) {
+            if (view!= null && isAwake) {
                 view.updateList();
             }
         }
-        if (view!= null) {
+        if (view!= null && isAwake) {
             view.closeRefresh();
         }
     }
@@ -128,7 +132,7 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
     @Override
     public void onErrorDownload(String message) {
         MainView view = weakReference.get();
-        if (view!= null) {
+        if (view!= null && isAwake) {
             view.showMessasge(message);
 
             //notes.add(new Note("Where can I get some?","There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc."));
@@ -147,14 +151,14 @@ public class MainPresenter implements NotesCallback, SaveNotesCallback{
 
     @Override
     public void onNotesSaveError(String message) {
-        if (weakReference.get() != null) {
+        if (weakReference.get() != null && isAwake) {
             weakReference.get().showMessasge(message);
         }
     }
 
     private void saveToServer() {
         MainView view = weakReference.get();
-        if (view == null) return;
+        if (view == null || !isAwake) return;
 
         if (calcSize(notes)) {
             RestClient.INSTANCE.getApiService().saveNotes(notes).enqueue(new SaveNotesWrapper(this));
